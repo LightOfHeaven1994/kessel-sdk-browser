@@ -90,7 +90,7 @@ function useSingleAccessCheck(
       abortController.abort();
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [config, enabled, resource?.id, resource?.type, relation]);
+  }, [config, enabled, resource?.id, resource?.type, resource?.reporter, relation]);
 
   return state;
 }
@@ -137,6 +137,7 @@ function useBulkResourcesKey(
     return JSON.stringify(resources.map(r => ({
       id: r.id,
       type: r.type,
+      reporter: r.reporter,
       relation: 'relation' in r ? r.relation : undefined,
     })));
   }, [resources]);

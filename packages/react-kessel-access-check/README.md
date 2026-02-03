@@ -566,7 +566,10 @@ Checks if the current user has the specified level of access to the provided res
 {
   "object": {
     "resourceId": "e07f0bbd-4743-404f-8dca-14d92026b52c",
-    "resourceType": "workspace"
+    "resourceType": "workspace",
+    "reporter": {
+      "type": "rbac"
+    }
   },
   "relation": "view"
 }
@@ -594,14 +597,20 @@ Checks if the current user has the specified level of access to multiple resourc
     {
       "object": {
         "resourceId": "3f2a1c9e-5b6d-4a1f-8c3b-2d7e9f01a2b3",
-        "resourceType": "workspace"
+        "resourceType": "workspace",
+        "reporter": {
+          "type": "rbac"
+        }
       },
       "relation": "delete"
     },
     {
       "object": {
         "resourceId": "a8d4c2f1-9e0b-4d59-8a7e-3c1d5f6b8e90",
-        "resourceType": "workspace"
+        "resourceType": "workspace",
+        "reporter": {
+          "type": "rbac"
+        }
       },
       "relation": "view"
     }
@@ -620,7 +629,10 @@ Checks if the current user has the specified level of access to multiple resourc
       "request": {
         "object": {
           "resourceId": "3f2a1c9e-5b6d-4a1f-8c3b-2d7e9f01a2b3",
-          "resourceType": "workspace"
+          "resourceType": "workspace",
+          "reporter": {
+            "type": "rbac"
+          }
         },
         "relation": "delete"
       },
@@ -632,7 +644,10 @@ Checks if the current user has the specified level of access to multiple resourc
       "request": {
         "object": {
           "resourceId": "a8d4c2f1-9e0b-4d59-8a7e-3c1d5f6b8e90",
-          "resourceType": "workspace"
+          "resourceType": "workspace",
+          "reporter": {
+            "type": "rbac"
+          }
         },
         "relation": "view"
       },

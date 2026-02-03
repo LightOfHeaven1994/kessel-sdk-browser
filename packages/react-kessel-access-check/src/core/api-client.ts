@@ -7,10 +7,16 @@ export type ApiConfig = {
 };
 
 // API Request/Response Types
+export type ReporterReference = {
+  type: string;
+  instanceId?: string;
+};
+
 export type CheckSelfRequest = {
   object: {
     resourceId: string;
     resourceType: string;
+    reporter: ReporterReference;
   };
   relation: string;
 };
@@ -35,6 +41,7 @@ export type CheckSelfBulkRequestItem = {
   object: {
     resourceId: string;
     resourceType: string;
+    reporter: ReporterReference;
   };
   relation: string;
 };
@@ -82,6 +89,7 @@ export async function checkSelf(
     object: {
       resourceId: params.resource.id,
       resourceType: params.resource.type,
+      reporter: params.resource.reporter,
     },
     relation: params.relation,
   };
@@ -138,6 +146,7 @@ export async function checkSelfBulk(
       object: {
         resourceId: item.resource.id,
         resourceType: item.resource.type,
+        reporter: item.resource.reporter as ReporterReference,
       },
       relation: item.relation,
     })),
