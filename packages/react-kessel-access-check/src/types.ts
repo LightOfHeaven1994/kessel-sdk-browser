@@ -5,6 +5,7 @@ export type NotEmptyArray<T> = [T, ...T[]];
 export type SelfAccessCheckResource = {
   id: string;
   type: string;
+  reporter: { type: string; instanceId?: string };
   [key: string]: unknown;
 };
 

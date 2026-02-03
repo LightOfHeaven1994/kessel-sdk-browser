@@ -22,7 +22,7 @@ describe('useSelfAccessCheck', () => {
 
   describe('single resource check', () => {
     it('should make API call and return allowed=true', async () => {
-      const resource = { id: 'test-id', type: 'workspace' };
+      const resource = { id: 'test-id', type: 'workspace', reporter: { type: 'rbac' } };
 
       mockFetch.mockResolvedValueOnce({
         ok: true,
@@ -68,6 +68,7 @@ describe('useSelfAccessCheck', () => {
             object: {
               resourceId: 'test-id',
               resourceType: 'workspace',
+              reporter: { type: 'rbac' },
             },
             relation: 'view',
           }),
@@ -76,7 +77,7 @@ describe('useSelfAccessCheck', () => {
     });
 
     it('should return allowed=false for ALLOWED_FALSE response', async () => {
-      const resource = { id: 'test-id', type: 'workspace' };
+      const resource = { id: 'test-id', type: 'workspace', reporter: { type: 'rbac' } };
 
       mockFetch.mockResolvedValueOnce({
         ok: true,
@@ -98,7 +99,7 @@ describe('useSelfAccessCheck', () => {
     });
 
     it('should return allowed=false for ALLOWED_UNSPECIFIED response', async () => {
-      const resource = { id: 'test-id', type: 'workspace' };
+      const resource = { id: 'test-id', type: 'workspace', reporter: { type: 'rbac' } };
 
       mockFetch.mockResolvedValueOnce({
         ok: true,
@@ -120,7 +121,7 @@ describe('useSelfAccessCheck', () => {
     });
 
     it('should handle 403 error response', async () => {
-      const resource = { id: 'test-id', type: 'workspace' };
+      const resource = { id: 'test-id', type: 'workspace', reporter: { type: 'rbac' } };
 
       mockFetch.mockResolvedValueOnce({
         ok: false,
@@ -155,7 +156,7 @@ describe('useSelfAccessCheck', () => {
     });
 
     it('should handle 404 error response', async () => {
-      const resource = { id: 'nonexistent', type: 'workspace' };
+      const resource = { id: 'nonexistent', type: 'workspace', reporter: { type: 'rbac' } };
 
       mockFetch.mockResolvedValueOnce({
         ok: false,
@@ -186,7 +187,7 @@ describe('useSelfAccessCheck', () => {
     });
 
     it('should handle 500 error response', async () => {
-      const resource = { id: 'test-id', type: 'workspace' };
+      const resource = { id: 'test-id', type: 'workspace', reporter: { type: 'rbac' } };
 
       mockFetch.mockResolvedValueOnce({
         ok: false,
@@ -219,6 +220,7 @@ describe('useSelfAccessCheck', () => {
       const resource = {
         id: 'test-id',
         type: 'workspace',
+        reporter: { type: 'rbac' },
         name: 'My Workspace',
         createdAt: '2024-01-01',
       };
@@ -246,7 +248,7 @@ describe('useSelfAccessCheck', () => {
     });
 
     it('should throw error when used outside provider', () => {
-      const resource = { id: 'test-id', type: 'workspace' };
+      const resource = { id: 'test-id', type: 'workspace', reporter: { type: 'rbac' } };
 
       // Suppress console error for this test
       const consoleError = jest.spyOn(console, 'error').mockImplementation();
@@ -267,20 +269,20 @@ describe('useSelfAccessCheck', () => {
   describe('bulk resource check - same relation', () => {
     it('should make bulk API call and return results', async () => {
       const resources = [
-        { id: 'ws-1', type: 'workspace' },
-        { id: 'ws-2', type: 'workspace' },
-      ] as [{ id: string; type: string }, ...{ id: string; type: string }[]];
+        { id: 'ws-1', type: 'workspace', reporter: { type: 'rbac' } },
+        { id: 'ws-2', type: 'workspace', reporter: { type: 'rbac' } },
+      ] as [{ id: string; type: string; reporter: { type: string } }, ...{ id: string; type: string; reporter: { type: string } }[]];
 
       mockFetch.mockResolvedValueOnce({
         ok: true,
         json: async () => ({
           pairs: [
             {
-              request: { object: { resourceId: 'ws-1', resourceType: 'workspace' }, relation: 'delete' },
+              request: { object: { resourceId: 'ws-1', resourceType: 'workspace', reporter: { type: 'rbac' } }, relation: 'delete' },
               item: { allowed: 'ALLOWED_TRUE' },
             },
             {
-              request: { object: { resourceId: 'ws-2', resourceType: 'workspace' }, relation: 'delete' },
+              request: { object: { resourceId: 'ws-2', resourceType: 'workspace', reporter: { type: 'rbac' } }, relation: 'delete' },
               item: { allowed: 'ALLOWED_FALSE' },
             },
           ],
@@ -321,8 +323,8 @@ describe('useSelfAccessCheck', () => {
           credentials: 'include',
           body: JSON.stringify({
             items: [
-              { object: { resourceId: 'ws-1', resourceType: 'workspace' }, relation: 'delete' },
-              { object: { resourceId: 'ws-2', resourceType: 'workspace' }, relation: 'delete' },
+              { object: { resourceId: 'ws-1', resourceType: 'workspace', reporter: { type: 'rbac' } }, relation: 'delete' },
+              { object: { resourceId: 'ws-2', resourceType: 'workspace', reporter: { type: 'rbac' } }, relation: 'delete' },
             ],
           }),
         })
@@ -331,9 +333,9 @@ describe('useSelfAccessCheck', () => {
 
     it('should handle bulk API errors', async () => {
       const resources = [
-        { id: 'ws-1', type: 'workspace' },
-        { id: 'ws-2', type: 'workspace' },
-      ] as [{ id: string; type: string }, ...{ id: string; type: string }[]];
+        { id: 'ws-1', type: 'workspace', reporter: { type: 'rbac' } },
+        { id: 'ws-2', type: 'workspace', reporter: { type: 'rbac' } },
+      ] as [{ id: string; type: string; reporter: { type: string } }, ...{ id: string; type: string; reporter: { type: string } }[]];
 
       mockFetch.mockResolvedValueOnce({
         ok: false,
@@ -366,20 +368,20 @@ describe('useSelfAccessCheck', () => {
 
     it('should pass consistency options to bulk API', async () => {
       const resources = [
-        { id: 'id-1', type: 'workspace' },
-        { id: 'id-2', type: 'workspace' },
-      ] as [{ id: string; type: string }, ...{ id: string; type: string }[]];
+        { id: 'id-1', type: 'workspace', reporter: { type: 'rbac' } },
+        { id: 'id-2', type: 'workspace', reporter: { type: 'rbac' } },
+      ] as [{ id: string; type: string; reporter: { type: string } }, ...{ id: string; type: string; reporter: { type: string } }[]];
 
       mockFetch.mockResolvedValueOnce({
         ok: true,
         json: async () => ({
           pairs: [
             {
-              request: { object: { resourceId: 'id-1', resourceType: 'workspace' }, relation: 'view' },
+              request: { object: { resourceId: 'id-1', resourceType: 'workspace', reporter: { type: 'rbac' } }, relation: 'view' },
               item: { allowed: 'ALLOWED_TRUE' },
             },
             {
-              request: { object: { resourceId: 'id-2', resourceType: 'workspace' }, relation: 'view' },
+              request: { object: { resourceId: 'id-2', resourceType: 'workspace', reporter: { type: 'rbac' } }, relation: 'view' },
               item: { allowed: 'ALLOWED_TRUE' },
             },
           ],
@@ -408,8 +410,8 @@ describe('useSelfAccessCheck', () => {
         expect.objectContaining({
           body: JSON.stringify({
             items: [
-              { object: { resourceId: 'id-1', resourceType: 'workspace' }, relation: 'view' },
-              { object: { resourceId: 'id-2', resourceType: 'workspace' }, relation: 'view' },
+              { object: { resourceId: 'id-1', resourceType: 'workspace', reporter: { type: 'rbac' } }, relation: 'view' },
+              { object: { resourceId: 'id-2', resourceType: 'workspace', reporter: { type: 'rbac' } }, relation: 'view' },
             ],
             consistency: { minimizeLatency: true },
           }),
@@ -421,12 +423,12 @@ describe('useSelfAccessCheck', () => {
   describe('bulk resource check - nested relations', () => {
     it('should make bulk API call with per-resource relations', async () => {
       const resources = [
-        { id: 'ws-1', type: 'workspace', relation: 'delete' },
-        { id: 'ws-2', type: 'workspace', relation: 'view' },
-        { id: 'ws-3', type: 'workspace', relation: 'edit' },
+        { id: 'ws-1', type: 'workspace', reporter: { type: 'rbac' }, relation: 'delete' },
+        { id: 'ws-2', type: 'workspace', reporter: { type: 'rbac' }, relation: 'view' },
+        { id: 'ws-3', type: 'workspace', reporter: { type: 'rbac' }, relation: 'edit' },
       ] as [
-        { id: string; type: string; relation: string },
-        ...{ id: string; type: string; relation: string }[]
+        { id: string; type: string; reporter: { type: string }; relation: string },
+        ...{ id: string; type: string; reporter: { type: string }; relation: string }[]
       ];
 
       mockFetch.mockResolvedValueOnce({
@@ -434,15 +436,15 @@ describe('useSelfAccessCheck', () => {
         json: async () => ({
           pairs: [
             {
-              request: { object: { resourceId: 'ws-1', resourceType: 'workspace' }, relation: 'delete' },
+              request: { object: { resourceId: 'ws-1', resourceType: 'workspace', reporter: { type: 'rbac' } }, relation: 'delete' },
               item: { allowed: 'ALLOWED_TRUE' },
             },
             {
-              request: { object: { resourceId: 'ws-2', resourceType: 'workspace' }, relation: 'view' },
+              request: { object: { resourceId: 'ws-2', resourceType: 'workspace', reporter: { type: 'rbac' } }, relation: 'view' },
               item: { allowed: 'ALLOWED_TRUE' },
             },
             {
-              request: { object: { resourceId: 'ws-3', resourceType: 'workspace' }, relation: 'edit' },
+              request: { object: { resourceId: 'ws-3', resourceType: 'workspace', reporter: { type: 'rbac' } }, relation: 'edit' },
               item: { allowed: 'ALLOWED_FALSE' },
             },
           ],
@@ -477,9 +479,9 @@ describe('useSelfAccessCheck', () => {
         expect.objectContaining({
           body: JSON.stringify({
             items: [
-              { object: { resourceId: 'ws-1', resourceType: 'workspace' }, relation: 'delete' },
-              { object: { resourceId: 'ws-2', resourceType: 'workspace' }, relation: 'view' },
-              { object: { resourceId: 'ws-3', resourceType: 'workspace' }, relation: 'edit' },
+              { object: { resourceId: 'ws-1', resourceType: 'workspace', reporter: { type: 'rbac' } }, relation: 'delete' },
+              { object: { resourceId: 'ws-2', resourceType: 'workspace', reporter: { type: 'rbac' } }, relation: 'view' },
+              { object: { resourceId: 'ws-3', resourceType: 'workspace', reporter: { type: 'rbac' } }, relation: 'edit' },
             ],
           }),
         })
@@ -488,11 +490,11 @@ describe('useSelfAccessCheck', () => {
 
     it('should handle per-item errors in bulk response', async () => {
       const resources = [
-        { id: 'ws-1', type: 'workspace', relation: 'delete' },
-        { id: 'error-item', type: 'workspace', relation: 'view' },
+        { id: 'ws-1', type: 'workspace', reporter: { type: 'rbac' }, relation: 'delete' },
+        { id: 'error-item', type: 'workspace', reporter: { type: 'rbac' }, relation: 'view' },
       ] as [
-        { id: string; type: string; relation: string },
-        ...{ id: string; type: string; relation: string }[]
+        { id: string; type: string; reporter: { type: string }; relation: string },
+        ...{ id: string; type: string; reporter: { type: string }; relation: string }[]
       ];
 
       mockFetch.mockResolvedValueOnce({
@@ -500,11 +502,11 @@ describe('useSelfAccessCheck', () => {
         json: async () => ({
           pairs: [
             {
-              request: { object: { resourceId: 'ws-1', resourceType: 'workspace' }, relation: 'delete' },
+              request: { object: { resourceId: 'ws-1', resourceType: 'workspace', reporter: { type: 'rbac' } }, relation: 'delete' },
               item: { allowed: 'ALLOWED_TRUE' },
             },
             {
-              request: { object: { resourceId: 'error-item', resourceType: 'workspace' }, relation: 'view' },
+              request: { object: { resourceId: 'error-item', resourceType: 'workspace', reporter: { type: 'rbac' } }, relation: 'view' },
               item: { allowed: 'ALLOWED_FALSE' },
               error: { code: 404, message: 'Resource not found', details: [] },
             },
@@ -535,11 +537,11 @@ describe('useSelfAccessCheck', () => {
 
     it('should pass atLeastAsFresh consistency option', async () => {
       const resources = [
-        { id: 'id-1', type: 'workspace', relation: 'delete' },
-        { id: 'id-2', type: 'workspace', relation: 'view' },
+        { id: 'id-1', type: 'workspace', reporter: { type: 'rbac' }, relation: 'delete' },
+        { id: 'id-2', type: 'workspace', reporter: { type: 'rbac' }, relation: 'view' },
       ] as [
-        { id: string; type: string; relation: string },
-        ...{ id: string; type: string; relation: string }[]
+        { id: string; type: string; reporter: { type: string }; relation: string },
+        ...{ id: string; type: string; reporter: { type: string }; relation: string }[]
       ];
 
       mockFetch.mockResolvedValueOnce({
@@ -547,11 +549,11 @@ describe('useSelfAccessCheck', () => {
         json: async () => ({
           pairs: [
             {
-              request: { object: { resourceId: 'id-1', resourceType: 'workspace' }, relation: 'delete' },
+              request: { object: { resourceId: 'id-1', resourceType: 'workspace', reporter: { type: 'rbac' } }, relation: 'delete' },
               item: { allowed: 'ALLOWED_TRUE' },
             },
             {
-              request: { object: { resourceId: 'id-2', resourceType: 'workspace' }, relation: 'view' },
+              request: { object: { resourceId: 'id-2', resourceType: 'workspace', reporter: { type: 'rbac' } }, relation: 'view' },
               item: { allowed: 'ALLOWED_FALSE' },
             },
           ],
@@ -582,8 +584,8 @@ describe('useSelfAccessCheck', () => {
         expect.objectContaining({
           body: JSON.stringify({
             items: [
-              { object: { resourceId: 'id-1', resourceType: 'workspace' }, relation: 'delete' },
-              { object: { resourceId: 'id-2', resourceType: 'workspace' }, relation: 'view' },
+              { object: { resourceId: 'id-1', resourceType: 'workspace', reporter: { type: 'rbac' } }, relation: 'delete' },
+              { object: { resourceId: 'id-2', resourceType: 'workspace', reporter: { type: 'rbac' } }, relation: 'view' },
             ],
             consistency: { 
               minimizeLatency: true,

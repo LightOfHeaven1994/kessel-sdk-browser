@@ -10,7 +10,7 @@ export const handlers = [
     await delay(800); // Simulate network latency
 
     const body = await request.json() as {
-      object: { resourceId: string; resourceType: string };
+      object: { resourceId: string; resourceType: string; reporter: { type: string; instanceId?: string } };
       relation: string;
     };
     const { object, relation } = body;
@@ -45,7 +45,7 @@ export const handlers = [
 
     const body = await request.json() as {
       items: Array<{
-        object: { resourceId: string; resourceType: string };
+        object: { resourceId: string; resourceType: string; reporter: { type: string; instanceId?: string } };
         relation: string;
       }>;
       consistency?: {
