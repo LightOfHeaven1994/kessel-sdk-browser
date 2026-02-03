@@ -1,3 +1,13 @@
+## 0.2.6 (2026-02-03)
+
+### 🩹 Fixes
+
+- add mandatory reporter field to selfCheck ([#32](https://github.com/project-kessel/kessel-sdk-browser/pull/32))
+
+### ❤️ Thank You
+
+- Egor Shamardin @LightOfHeaven1994
+
 ## 0.2.5 (2026-02-03)
 
 ### 🩹 Fixes
