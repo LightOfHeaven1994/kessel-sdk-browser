@@ -1,3 +1,13 @@
+## 0.3.1 (2026-02-10)
+
+### 🩹 Fixes
+
+- update README to include information on reporter and bulk check access chunking ([#38](https://github.com/project-kessel/kessel-sdk-browser/pull/38))
+
+### ❤️ Thank You
+
+- Tahmid Efaz
+
 ## 0.3.0 (2026-02-10)
 
 ### 🚀 Features
